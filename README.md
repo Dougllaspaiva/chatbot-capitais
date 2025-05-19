@@ -1,3 +1,7 @@
+## Como usar Acesse o link: https://dougllaspaiva.github.io/chatbot-capitais/
+
+
+
 # Chatbot Capitais do Brasil 🇧🇷
 
 Este é um projeto simples e funcional de chatbot desenvolvido com **HTML, CSS e JavaScript**. Ele permite que o usuário pergunte sobre a capital de qualquer estado do Brasil, e o bot responde automaticamente.
