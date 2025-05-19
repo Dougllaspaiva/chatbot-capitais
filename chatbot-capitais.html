@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Chatbot Capitais do Brasil</title>
+    <style>
+        body { background: #2a5298; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .chat-container { background: #fff; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); width: 400px; max-width: 90vw; display: flex; flex-direction: column; }
+        .chat-header { background: #2a5298; color: #fff; padding: 20px; border-radius: 20px 20px 0 0; text-align: center; font-size: 1.3em; }
+        .chat-messages { flex: 1; padding: 20px; overflow-y: auto; }
+        .message { margin-bottom: 10px; padding: 10px 15px; border-radius: 15px; max-width: 80%; }
+        .bot-message { background: #e9ecef; margin-right: auto; }
+        .user-message { background: #2a5298; color: #fff; margin-left: auto; }
+        .chat-input { display: flex; padding: 20px; background: #f8f9fa; border-radius: 0 0 20px 20px; }
+        input { flex: 1; padding: 10px; border-radius: 20px; border: 1px solid #ccc; outline: none; }
+        button { margin-left: 10px; padding: 10px 20px; border-radius: 20px; border: none; background: #2a5298; color: #fff; cursor: pointer; }
+        button:hover { background: #1e3c72; }
+    </style>
+</head>
+<body>
+<div class="chat-container">
+    <div class="chat-header">Chatbot Capitais do Brasil</div>
+    <div class="chat-messages" id="chatMessages">
+        <div class="message bot-message">Olá! Pergunte sobre a capital de qualquer estado do Brasil.</div>
+    </div>
+    <div class="chat-input">
+        <input type="text" id="userInput" placeholder="Digite sua pergunta aqui..." autocomplete="off">
+        <button id="sendBtn">Enviar</button>
+    </div>
+</div>
+<script>
+    const capitais = {
+        'Acre': 'Rio Branco', 'Alagoas': 'Maceió', 'Amapá': 'Macapá', 'Amazonas': 'Manaus',
+        'Bahia': 'Salvador', 'Ceará': 'Fortaleza', 'Distrito Federal': 'Brasília', 'Espírito Santo': 'Vitória',
+        'Goiás': 'Goiânia', 'Maranhão': 'São Luís', 'Mato Grosso': 'Cuiabá', 'Mato Grosso do Sul': 'Campo Grande',
+        'Minas Gerais': 'Belo Horizonte', 'Pará': 'Belém', 'Paraíba': 'João Pessoa', 'Paraná': 'Curitiba',
+        'Pernambuco': 'Recife', 'Piauí': 'Teresina', 'Rio de Janeiro': 'Rio de Janeiro', 'Rio Grande do Norte': 'Natal',
+        'Rio Grande do Sul': 'Porto Alegre', 'Rondônia': 'Porto Velho', 'Roraima': 'Boa Vista',
+        'Santa Catarina': 'Florianópolis', 'São Paulo': 'São Paulo', 'Sergipe': 'Aracaju', 'Tocantins': 'Palmas'
+    };
+    const chatMessages = document.getElementById('chatMessages');
+    const input = document.getElementById('userInput');
+    const button = document.getElementById('sendBtn');
+
+    function addMessage(message, isUser = false) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+        messageDiv.textContent = message;
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function removeAcentos(str) {
+        return str.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+    }
+
+    function processMessage(message) {
+        const msg = removeAcentos(message.toLowerCase().trim());
+        for (const estado in capitais) {
+            const estadoSemAcento = removeAcentos(estado.toLowerCase());
+            if (msg.includes(estadoSemAcento)) {
+                return `A capital de ${estado} é ${capitais[estado]}.`;
+            }
+        }
+        return 'Desculpe, não entendi. Exemplos: "Qual a capital do Acre?", "Capital de São Paulo?"';
+    }
+
+    function sendMessage() {
+        const message = input.value.trim();
+        if (message) {
+            addMessage(message, true);
+            input.value = '';
+            const response = processMessage(message);
+            setTimeout(() => addMessage(response), 500);
+        }
+    }
+
+    // Enter no input
+    input.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            sendMessage();
+        }
+    });
+
+    // Clique no botão
+    button.addEventListener('click', function() {
+        sendMessage();
+    });
+
+    // Foco automático ao carregar
+    input.focus();
+</script>
+</body>
+</html>
